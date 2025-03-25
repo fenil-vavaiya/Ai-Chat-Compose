@@ -22,8 +22,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -58,10 +57,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Preferences DataStore
-    implementation (libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences)
 
     // Jetpack Compose Navigation
-    implementation (libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
+
+    // navigation animation
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
 
 
 }
