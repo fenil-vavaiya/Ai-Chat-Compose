@@ -2,6 +2,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.google.services)
+
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
+
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -63,7 +70,27 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // navigation animation
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
+    implementation(libs.accompanist.navigation.animation)
+
+    // firebase-auth
+    implementation (libs.firebase.auth)
+    implementation (libs.play.services.auth)
+
+    // Firebase BoM (always use the latest version)
+    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+
+    // Hilt Dependencies
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // Hilt with Navigation (For Fragments)
+    implementation(libs.androidx.hilt.navigation.fragment)
+
+    // Hilt ViewModel
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
+
+    // Hilt for Navigation Component (if needed)
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
 
 }
