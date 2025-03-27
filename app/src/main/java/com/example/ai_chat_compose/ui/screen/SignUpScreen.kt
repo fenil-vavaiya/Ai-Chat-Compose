@@ -40,10 +40,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.ai_chat_compose.R
+import com.example.ai_chat_compose.data.model.UserModel
 import com.example.ai_chat_compose.domain.Resource
 import com.example.ai_chat_compose.presentation.viewmodel.AuthViewModel
 import com.example.ai_chat_compose.presentation.viewmodel.MainViewModel
 import com.example.ai_chat_compose.ui.theme.Nunito
+import com.example.ai_chat_compose.util.Const
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
@@ -88,8 +90,7 @@ fun SignUpScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Welcome to AI-Chat",
-                style = TextStyle(
+                text = "Welcome to AI-Chat", style = TextStyle(
                     fontFamily = Nunito,
                     fontWeight = FontWeight.Bold,
                     fontSize = 28.sp,
@@ -125,6 +126,14 @@ fun SignUpScreen(
                     // Navigate to next screen after success
                     LaunchedEffect(Unit) {
                         scope.launch {
+                            val user = (signInState as Resource.Success<FirebaseUser>).data
+                            viewModel.dataStoreManager.saveObject(
+                                Const.USER_MODEL, UserModel(
+                                    user.displayName ?: "Demo User",
+                                    user.email ?: "demoEmail",
+                                    user.photoUrl.toString()
+                                )
+                            )
                             viewModel.saveLoginStatus(true)
                             navController.navigate("onboarding") {
                                 popUpTo("signup") { inclusive = true }
@@ -164,15 +173,12 @@ fun SignUpScreen(
                     ) {
                         Spacer(modifier = Modifier.weight(1f)) // Pushes text to center
                         Text(
-                            text = "Sign in with Google",
-                            style = TextStyle(
+                            text = "Sign in with Google", style = TextStyle(
                                 fontFamily = Nunito,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black
-                            ),
-                            modifier = Modifier.weight(2f),
-                            textAlign = TextAlign.Center
+                            ), modifier = Modifier.weight(2f), textAlign = TextAlign.Center
                         )
                         Image(
                             painter = painterResource(R.drawable.ic_google),

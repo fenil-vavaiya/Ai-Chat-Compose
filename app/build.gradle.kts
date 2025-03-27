@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.ai_chat_compose"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -77,7 +77,7 @@ dependencies {
     implementation (libs.play.services.auth)
 
     // Firebase BoM (always use the latest version)
-    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+    implementation(platform(libs.firebase.bom))
 
     // Hilt Dependencies
     implementation(libs.hilt.android)
@@ -87,10 +87,15 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
 
     // Hilt ViewModel
-    ksp("androidx.hilt:hilt-compiler:1.2.0")
+    ksp(libs.androidx.hilt.compiler)
 
     // Hilt for Navigation Component (if needed)
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation (libs.androidx.hilt.navigation.compose)
 
+    // google.gson
+    implementation(libs.google.gson)
+
+    // google.ai
+    implementation(libs.generativeai)
 
 }

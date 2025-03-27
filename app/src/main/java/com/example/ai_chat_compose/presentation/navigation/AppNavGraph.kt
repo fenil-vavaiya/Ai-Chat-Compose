@@ -62,7 +62,7 @@ fun AppNavGraph(navController: NavHostController, viewModel: MainViewModel) {
         composable("splash") { SplashScreen() }
         composable("signup") { SignUpScreen(navController, viewModel) }
         composable("onboarding") { OnboardingScreen(navController, viewModel) }
-        composable("home") { HomeScreen() }
+        composable("home") { HomeScreen(  ) }
     }
 }
 

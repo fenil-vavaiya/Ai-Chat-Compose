@@ -14,3 +14,5 @@ val Pink40 = Color(0xFF7D5260)
 // App color
 val Theme = Color(0xFF3369FF)
 val Grey = Color(0xFF757575)
+val ColorUserMessage = Color(0xFF03A9F4)
+val ColorModelMessage = Color(0xFF4CAF50)

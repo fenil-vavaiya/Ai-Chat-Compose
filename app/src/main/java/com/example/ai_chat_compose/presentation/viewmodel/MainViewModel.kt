@@ -6,7 +6,7 @@ import com.example.ai_chat_compose.data.datastore.DataStoreManager
 import kotlinx.coroutines.flow.Flow
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val dataStoreManager = DataStoreManager(application)
+     val dataStoreManager = DataStoreManager(application)
 
     val isLoggedIn: Flow<Boolean> = dataStoreManager.isLoggedIn
     val isOnboardingSeen: Flow<Boolean> = dataStoreManager.isOnboardingSeen
