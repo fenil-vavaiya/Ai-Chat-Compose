@@ -14,7 +14,7 @@ object NetworkModule {
     @Provides
     fun provideGenerativeModel(): GenerativeModel {
         return GenerativeModel(
-            modelName = "gemini-pro-1.5",
+            modelName = "gemini-1.5-flash-latest",
             apiKey = Const.API_KEY
         )
     }

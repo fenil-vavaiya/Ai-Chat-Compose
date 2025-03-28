@@ -14,13 +14,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,7 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,8 +50,9 @@ import com.example.ai_chat_compose.ui.theme.ColorUserMessage
 import com.example.ai_chat_compose.ui.theme.Grey
 import com.example.ai_chat_compose.ui.theme.Nunito
 import com.example.ai_chat_compose.ui.theme.Purple80
+import com.example.ai_chat_compose.ui.theme.Theme
+import com.example.ai_chat_compose.ui.theme.etHint
 
-@Preview
 @Composable
 fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
     Column(
@@ -60,6 +65,7 @@ fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
         Row(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
+                .padding(top = 30.dp)
                 .height(50.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -91,18 +97,18 @@ fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
         )
         MessageList(
             modifier = Modifier.weight(1f),
-           chatViewModel = chatViewModel
+            chatViewModel = chatViewModel
         )
         MessageInput(
             onMessageSend = {
-                chatViewModel.sendMessage(it)
+                /*chatViewModel.sendMessage(it)*/
             }
         )
     }
 }
 
 @Composable
-fun MessageList(modifier: Modifier = Modifier, chatViewModel: ChatViewModel,  ) {
+fun MessageList(modifier: Modifier = Modifier, chatViewModel: ChatViewModel) {
 
     val messageList by chatViewModel.messageList.collectAsState()
 
@@ -170,34 +176,124 @@ fun MessageItem(messageModel: MessageModel) {
 }
 
 @Composable
-fun MessageInput(onMessageSend : (String)-> Unit) {
+fun MessageInput(onMessageSend: (String) -> Unit) {
 
     var message by remember {
         mutableStateOf("")
     }
-
-    Row(
-        modifier = Modifier.padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Card(
+        shape = RoundedCornerShape(30.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        modifier = Modifier.padding(horizontal = 20.dp).padding(bottom = 30.dp)
     ) {
-        OutlinedTextField(
-            modifier = Modifier.weight(1f),
-            value = message,
-            onValueChange = {
-                message = it
-            }
-        )
-        IconButton(onClick = {
-            if(message.isNotEmpty()){
-                onMessageSend(message)
-                message = ""
-            }
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 5.dp)
 
-        }) {
-            Icon(
-                imageVector = Icons.Default.Send,
-                contentDescription = "Send"
+                ,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ChatTextField(
+                text = message,
+                onTextChange = { message = it },
+                modifier = Modifier.weight(1f)
             )
+            IconButton(onClick = {
+
+
+            }) {
+                Icon(
+                    painterResource(R.drawable.ic_mic),
+                    contentDescription = "Mic",
+
+                    )
+            }
+            IconButton(onClick = {
+                if (message.isNotEmpty()) {
+                    onMessageSend(message)
+                    message = ""
+                }
+
+            }) {
+                Icon(
+                    painterResource(R.drawable.ic_send),
+                    contentDescription = "Send",
+                    tint = Theme
+                )
+            }
         }
     }
+
 }
+/*@Composable
+fun ChatTextField(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    BasicTextField(
+        value = text,
+        onValueChange = onTextChange,
+        textStyle = TextStyle(
+            fontFamily = Nunito,
+            fontWeight = FontWeight.Medium,
+            color = colorResource(id = R.color.black),
+            fontSize = 18.sp
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp) // ✅ Fixed height without compression
+            .background(Color.Transparent)
+            .padding(horizontal = 10.dp, vertical = 8.dp), // ✅ Fine-tune text positioning
+        decorationBox = { innerTextField ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                if (text.isEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.messageWithDot),
+                        color = etHint,
+                        fontSize = 18.sp
+                    )
+                }
+                innerTextField()
+            }
+        }
+    )
+}*/
+
+
+@Composable
+fun ChatTextField(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextField(
+        value = text,
+        onValueChange = onTextChange,
+        placeholder = { Text(stringResource(id = R.string.messageWithDot), color = etHint) },
+        textStyle = TextStyle(
+            fontFamily = Nunito,
+            fontWeight = FontWeight.Medium,
+            color = colorResource(id = R.color.black),
+            fontSize = 18.sp
+        ),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            errorContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+            .padding(0.dp), // ✅ Removes any additional padding
+        shape = RectangleShape // ✅ Prevents extra rounded padding
+    )
+}
+

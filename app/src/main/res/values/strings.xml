@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Ai-Chat-Compose</string>
+    <string name="messageWithDot">Ask anything…</string>
 </resources>
