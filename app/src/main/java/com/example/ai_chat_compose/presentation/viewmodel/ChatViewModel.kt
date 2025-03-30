@@ -19,9 +19,13 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val generativeModel: GenerativeModel // Injected via Hilt
 ) : ViewModel() {
+    private val _messageList =
+        MutableStateFlow<List<MessageModel>>(emptyList()) // StateFlow for live updates
+    val messageList: StateFlow<List<MessageModel>> =
+        _messageList.asStateFlow() // Exposed as immutable Flow
 
-    private val _messageList = MutableStateFlow<List<MessageModel>>(emptyList()) // StateFlow for live updates
-    val messageList: StateFlow<List<MessageModel>> = _messageList.asStateFlow() // Exposed as immutable Flow
+
+
 
     fun sendMessage(question: String) {
         viewModelScope.launch {
@@ -29,24 +33,28 @@ class ChatViewModel @Inject constructor(
                 val chat = generativeModel.startChat(
                     history = _messageList.value.map {
                         content(it.role) { text(it.message) }
-                    }
-                )
-
+                    })
                 // Update list reactively
-                _messageList.update { it + MessageModel(question, "user") + MessageModel("Typing....", "model") }
+                _messageList.update {
+                    it + MessageModel(question, "user") + MessageModel("Typing....", "model")
+                }
 
                 val response = chat.sendMessage(question)
 
                 _messageList.update { currentList ->
-                    currentList.dropLast(1) + MessageModel(response.text.toString(), "model") // Remove "Typing..." and add response
+                    currentList.dropLast(1) + MessageModel(
+                        response.text.toString(), "model"
+                    ) // Remove "Typing..." and add response
                 }
             } catch (e: Exception) {
 
-                Log.d(TAG, "sendMessage: message = "+e.message)
+                Log.d(TAG, "sendMessage: message = " + e.message)
                 _messageList.update { currentList ->
                     currentList.dropLast(1) + MessageModel("Error: ${e.message}", "model")
                 }
             }
         }
     }
+
+
 }

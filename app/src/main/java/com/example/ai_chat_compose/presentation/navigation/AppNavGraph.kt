@@ -54,10 +54,10 @@ fun AppNavGraph(navController: NavHostController, viewModel: MainViewModel) {
     AnimatedNavHost(
         navController = navController,
         startDestination = "splash",
-        enterTransition = { slideInHorizontally(initialOffsetX = { it },animationSpec = tween(1500)) },
-        exitTransition = { slideOutHorizontally(targetOffsetX = { it },animationSpec = tween(1500)) },
-        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it },animationSpec = tween(1500)) },
-        popExitTransition = {  slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(1500)) }
+        enterTransition = { slideInHorizontally(initialOffsetX = { it },animationSpec = tween(700)) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { it },animationSpec = tween(700)) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it },animationSpec = tween(700)) },
+        popExitTransition = {  slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(700)) }
     ) {
         composable("splash") { SplashScreen() }
         composable("signup") { SignUpScreen(navController, viewModel) }

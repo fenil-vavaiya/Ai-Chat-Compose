@@ -98,4 +98,10 @@ dependencies {
     // google.ai
     implementation(libs.generativeai)
 
+    // system ui controller
+    implementation (libs.accompanist.systemuicontroller)
+
+    implementation (libs.accompanist.permissions)
+
+
 }
