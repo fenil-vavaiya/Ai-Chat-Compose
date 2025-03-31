@@ -71,9 +71,7 @@ import com.example.ai_chat_compose.ui.theme.Theme
 import com.example.ai_chat_compose.ui.theme.etHint
 import com.example.ai_chat_compose.util.Const.TAG
 import com.example.ai_chat_compose.util.utility.SetStatusBarColor
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.delay
-import java.util.Locale
 
 @Composable
 fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
@@ -348,36 +346,42 @@ fun TypingTextAnimation(
 }
 
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MessageInput(onMessageSend: (String) -> Unit, modifier: Modifier) {
 
-    var message by remember {
-        mutableStateOf("")
-    }
+    var message by remember { mutableStateOf("") }
+
     val context = LocalContext.current
+
     val speechLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        Log.d(TAG, "Speech Recognizer Result: ${result.resultCode}")
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
             val speechText =
-                data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull() ?: ""
+                data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.getOrNull(0)
+                    ?: "No speech detected"
             message = speechText
+            Log.d(TAG, "Recognized Speech: $message")
+        } else {
+            Log.e(TAG, "Speech Recognition Failed or Cancelled")
         }
     }
 
+
     fun startSpeechToText() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-            )
+            putExtra("calling_package", javaClass.getPackage()?.name)
             putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en")
         }
+        Log.d(TAG, "Launching Speech Recognizer")
         speechLauncher.launch(intent)
     }
+
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -406,7 +410,11 @@ fun MessageInput(onMessageSend: (String) -> Unit, modifier: Modifier) {
             )
 
             IconButton(onClick = {
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.RECORD_AUDIO
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
                     startSpeechToText()
                 } else {
                     permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -431,6 +439,12 @@ fun MessageInput(onMessageSend: (String) -> Unit, modifier: Modifier) {
             }
         }
     }
+}
+
+@Composable
+fun rememberActivity(): Activity? {
+    val context = LocalContext.current
+    return context as? Activity
 }
 
 
