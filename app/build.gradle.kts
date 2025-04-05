@@ -101,7 +101,18 @@ dependencies {
     // system ui controller
     implementation (libs.accompanist.systemuicontroller)
 
+    // google permissions
     implementation (libs.accompanist.permissions)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+    // Room Coroutines Support
+    implementation (libs.androidx.room.ktx)
+
+    // Room Paging Support
+    implementation (libs.androidx.room.paging)
 
 
 }

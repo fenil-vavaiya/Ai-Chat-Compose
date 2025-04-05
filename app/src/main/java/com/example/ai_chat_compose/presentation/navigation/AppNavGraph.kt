@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import com.example.ai_chat_compose.presentation.viewmodel.MainViewModel
-import com.example.ai_chat_compose.ui.screen.HomeScreen
+import com.example.ai_chat_compose.ui.screen.home.HomeScreen
 import com.example.ai_chat_compose.ui.screen.OnboardingScreen
 import com.example.ai_chat_compose.ui.screen.SignUpScreen
 import com.example.ai_chat_compose.ui.screen.SplashScreen
