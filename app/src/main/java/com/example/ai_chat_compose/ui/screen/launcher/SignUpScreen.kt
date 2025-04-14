@@ -1,4 +1,4 @@
-package com.example.ai_chat_compose.ui.screen
+package com.example.ai_chat_compose.ui.screen.launcher
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -72,7 +72,7 @@ fun SignUpScreen(
 
     val signInState by authViewModel.signInResult.collectAsState()
 
-    Box() {
+    Box {
         Image(
             painter = painterResource(R.drawable.img_signup_bg),
             contentDescription = "Signup",

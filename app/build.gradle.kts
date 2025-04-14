@@ -5,7 +5,7 @@ plugins {
 
     alias(libs.plugins.google.services)
 
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
 
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
@@ -73,8 +73,8 @@ dependencies {
     implementation(libs.accompanist.navigation.animation)
 
     // firebase-auth
-    implementation (libs.firebase.auth)
-    implementation (libs.play.services.auth)
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
 
     // Firebase BoM (always use the latest version)
     implementation(platform(libs.firebase.bom))
@@ -90,7 +90,7 @@ dependencies {
     ksp(libs.androidx.hilt.compiler)
 
     // Hilt for Navigation Component (if needed)
-    implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // google.gson
     implementation(libs.google.gson)
@@ -99,20 +99,37 @@ dependencies {
     implementation(libs.generativeai)
 
     // system ui controller
-    implementation (libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.systemuicontroller)
 
     // google permissions
-    implementation (libs.accompanist.permissions)
+    implementation(libs.accompanist.permissions)
 
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
 
     // Room Coroutines Support
-    implementation (libs.androidx.room.ktx)
+    implementation(libs.androidx.room.ktx)
 
     // Room Paging Support
-    implementation (libs.androidx.room.paging)
+    implementation(libs.androidx.room.paging)
+
+    // ktor-client
+    val ktorVersion = "2.3.9"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion") // <-- since you're on Android
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-client-android:$ktorVersion") // optional if not using OkHttp directly
+
+    // compose.foundation
+    implementation("androidx.compose.foundation:foundation:1.6.0") // Or latest
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+
 
 
 }

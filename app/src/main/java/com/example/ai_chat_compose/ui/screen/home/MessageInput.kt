@@ -100,7 +100,6 @@ fun MessageInput(onMessageSend: (String) -> Unit, modifier: Modifier) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = modifier
             .padding(horizontal = 20.dp)
-            .padding(bottom = 30.dp)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),

@@ -39,26 +39,41 @@ import com.example.ai_chat_compose.ui.theme.Nunito
 
 @Composable
 fun DrawerContent(
-    chatViewModel: ChatViewModel, onNewConvoClick: (String) -> Unit, onItemClick: () -> Unit
+    chatViewModel: ChatViewModel, onNewConvoClick: () -> Unit, onItemClick: () -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val drawerWidth = screenWidth * 0.85f
     val conversationList by chatViewModel.conversations.collectAsState()
     val listState = rememberLazyListState()
 
+    var searchQuery by remember { mutableStateOf("") }
+
+    val filteredConversations = conversationList.filter {
+        it.title.contains(searchQuery, ignoreCase = true)
+    }
+
     Column(
         modifier = Modifier
             .width(drawerWidth)
             .fillMaxHeight()
             .background(Color.White)
-            .padding(top = 30.dp), verticalArrangement = Arrangement.spacedBy(10.dp)
+            .padding(top = 10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        DrawerHeader(onTextChange = {searchQuery = it}, onNewConvoClick =  onNewConvoClick)
 
-        DrawerHeader(onNewConvoClick)
+        Text(
+            text = "Conversations",
+            style = TextStyle(
+                fontFamily = Nunito,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 5.dp)
+        )
 
         LazyColumn(state = listState) {
-            items(conversationList.size) {
-                val conversation = conversationList[it]
+            items(filteredConversations.size) {
+                val conversation = filteredConversations[it]
                 Text(
                     text = conversation.title,
                     style = TextStyle(
@@ -66,7 +81,9 @@ fun DrawerContent(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    modifier = Modifier.padding(vertical = 5.dp).clickable { onItemClick(); chatViewModel.selectConversation(conversation.id) }
+                    modifier = Modifier
+                        .padding(horizontal = 15.dp, vertical = 15.dp)
+                        .clickable { onItemClick(); chatViewModel.selectConversation(conversation.id) }
                 )
             }
         }
@@ -75,7 +92,7 @@ fun DrawerContent(
 }
 
 @Composable
-private fun DrawerHeader(onNewConvoClick: (String) -> Unit) {
+private fun DrawerHeader(onTextChange: (String) -> Unit, onNewConvoClick: () -> Unit) {
     var searchInput by remember { mutableStateOf("") }
     Row(
         modifier = Modifier
@@ -102,11 +119,11 @@ private fun DrawerHeader(onNewConvoClick: (String) -> Unit) {
             )
             ChatTextField(
                 text = searchInput,
-                onTextChange = { searchInput = it },
+                onTextChange = { searchInput = it; onTextChange(searchInput) },
                 modifier = Modifier.weight(1f)
             )
         }
-        IconButton({ onNewConvoClick(searchInput) }) {
+        IconButton({ onNewConvoClick() }) {
             Icon(
                 painterResource(R.drawable.ic_new_chat),
                 contentDescription = "new conversation",

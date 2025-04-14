@@ -1,4 +1,4 @@
-package com.example.ai_chat_compose.ui.screen
+package com.example.ai_chat_compose.ui.screen.launcher
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

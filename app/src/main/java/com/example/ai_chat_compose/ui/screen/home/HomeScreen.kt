@@ -58,27 +58,23 @@ import com.example.ai_chat_compose.ui.theme.Grey2
 import com.example.ai_chat_compose.ui.theme.Nunito
 import com.example.ai_chat_compose.ui.theme.Theme
 import com.example.ai_chat_compose.util.Const.TAG
-import com.example.ai_chat_compose.util.utility.SetStatusBarColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
 
-    SetStatusBarColor(darkIcons = true)
+//    SetStatusBarColor(darkIcons = true)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
         drawerState = drawerState, drawerContent = {
-            DrawerContent(
-
-                chatViewModel = chatViewModel,
-                onItemClick = {
-                    scope.launch { drawerState.close() }
-                },
-                onNewConvoClick = {}
-            )
+            DrawerContent(chatViewModel = chatViewModel, onItemClick = {
+                scope.launch { drawerState.close() }
+            }, onNewConvoClick = {
+                scope.launch { chatViewModel.startNewConversation(); drawerState.close() }
+            })
         }) {
         Column(
             modifier = Modifier
@@ -87,7 +83,7 @@ fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Header(onHistoryClick = { scope.launch { drawerState.open() } }, onNewsClick = {})
+            Header(onHistoryClick = { scope.launch { drawerState.open() } } )
 
             Box(
                 modifier = Modifier
@@ -112,14 +108,13 @@ fun HomeScreen(chatViewModel: ChatViewModel = hiltViewModel()) {
 
 
 @Composable
-private fun Header(onHistoryClick: () -> Unit, onNewsClick: () -> Unit) {
+private fun Header(onHistoryClick: () -> Unit ) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .padding(top = 30.dp)
+            .padding(horizontal = 10.dp)
             .height(50.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
 
         IconButton(onClick = { onHistoryClick() }) {
@@ -137,12 +132,6 @@ private fun Header(onHistoryClick: () -> Unit, onNewsClick: () -> Unit) {
             ), modifier = Modifier.weight(1f)
         )
 
-        IconButton(onClick = { onNewsClick() }) {
-            Icon(
-                painterResource(R.drawable.ic_news), tint = Theme, contentDescription = "News",
-                modifier = Modifier.size(30.dp)
-            )
-        }
     }
 
     Divider(
@@ -157,10 +146,11 @@ private fun Header(onHistoryClick: () -> Unit, onNewsClick: () -> Unit) {
 fun MessageList(modifier: Modifier = Modifier, chatViewModel: ChatViewModel) {
 
     val messageList by chatViewModel.messages.collectAsState()
-
+    Log.d(TAG, "MessageList: messageList = ${messageList.size}")
     if (messageList.isEmpty()) {
-        chatViewModel.createNewConversation()
-        SuggestionsInput(modifier, chatViewModel)
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            SuggestionsInput(chatViewModel)
+        }
     } else {
         LazyColumn(
             modifier = modifier, reverseLayout = true
@@ -175,17 +165,16 @@ fun MessageList(modifier: Modifier = Modifier, chatViewModel: ChatViewModel) {
 @Composable
 
 private fun SuggestionsInput(
-    modifier: Modifier = Modifier, chatViewModel: ChatViewModel = hiltViewModel()
+    chatViewModel: ChatViewModel = hiltViewModel()
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         item {
 
             Column(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {

@@ -8,6 +8,7 @@ import com.example.ai_chat_compose.data.db.AppDatabase
 import com.example.ai_chat_compose.data.repo.ChatRepository
 import com.example.ai_chat_compose.util.Const
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.generationConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,14 +16,17 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
-@InstallIn(ViewModelComponent::class) // Only for ViewModel Scope
+@InstallIn(ViewModelComponent::class)
 object NetworkModule {
 
     @Provides
     fun provideGenerativeModel(): GenerativeModel {
         return GenerativeModel(
             modelName = "gemini-1.5-flash-latest",
-            apiKey = Const.API_KEY
+            apiKey = Const.API_KEY,
+            generationConfig = generationConfig {
+                temperature = 0.7f
+            }
         )
     }
     @Provides

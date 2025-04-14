@@ -12,10 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import com.example.ai_chat_compose.presentation.viewmodel.MainViewModel
-import com.example.ai_chat_compose.ui.screen.home.HomeScreen
-import com.example.ai_chat_compose.ui.screen.OnboardingScreen
-import com.example.ai_chat_compose.ui.screen.SignUpScreen
-import com.example.ai_chat_compose.ui.screen.SplashScreen
+import com.example.ai_chat_compose.ui.screen.home.bottombar.CustomBottomNavApp
+import com.example.ai_chat_compose.ui.screen.launcher.OnboardingScreen
+import com.example.ai_chat_compose.ui.screen.launcher.SignUpScreen
+import com.example.ai_chat_compose.ui.screen.launcher.SplashScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import kotlinx.coroutines.delay
@@ -62,7 +62,7 @@ fun AppNavGraph(navController: NavHostController, viewModel: MainViewModel) {
         composable("splash") { SplashScreen() }
         composable("signup") { SignUpScreen(navController, viewModel) }
         composable("onboarding") { OnboardingScreen(navController, viewModel) }
-        composable("home") { HomeScreen(  ) }
+        composable("home") {  CustomBottomNavApp() }
     }
 }
 
